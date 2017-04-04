@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 --			test_inheritance
 --			test_biologist_pet_name ("Teddy")
 --			test_bio_informatics_short_bio ("test_bio")
+--			test_lab
 
 			io.set_output_default
 			io.read_character
@@ -173,6 +174,42 @@ feature {NONE} -- Initialization
 				new_out.last_string.is_equal ("Short bio: " + short_bio)
 			end
 			new_out.close
+		end
+
+	test_lab
+		local
+		  lab: LAB
+			scientist: SCIENTIST
+		do
+			new_out.open_write
+		  create lab
+			create {COMPUTER_SCIENTIST} scientist
+			lab.add_member (scientist)
+
+			create {BIO_INFORMATICS} scientist
+			scientist.id := 10
+			lab.add_member (scientist)
+
+			create {BIOLOGIST} scientist
+			scientist.id := 5
+			lab.remove_member (scientist)
+
+
+			lab.introduce_all
+			new_out.close
+			new_out.open_read
+			new_out.read_line
+			check
+				new_out.last_string.is_equal ("Id: 0")
+			end
+
+			new_out.read_line
+			new_out.read_line
+			check
+				new_out.last_string.is_equal ("Id: 10")
+			end
+			new_out.close
+
 		end
 
 end
