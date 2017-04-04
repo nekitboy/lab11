@@ -23,15 +23,16 @@ feature {NONE} -- Initialization
 			create new_out.make_create_read_write ("out.txt")
 			io.set_file_default (new_out)
 
---			test_biologist_id (1)
---			test_biologist_name ("Name")
---			test_biologist_discipline
---			test_cs_discipline
---			test_bioinformatics_discipline
---			test_inheritance
---			test_biologist_pet_name ("Teddy")
---			test_bio_informatics_short_bio ("test_bio")
---			test_lab
+				--			test_biologist_id (1)
+				--			test_biologist_name ("Name")
+				--			test_biologist_discipline
+				--			test_cs_discipline
+				--			test_bioinformatics_discipline
+				--			test_inheritance
+				--			test_biologist_pet_name ("Teddy")
+				--			test_bio_informatics_short_bio ("test_bio")
+				--			test_lab
+				--			test_lab_extension
 
 			io.set_output_default
 			io.read_character
@@ -126,8 +127,8 @@ feature {NONE} -- Initialization
 	test_inheritance
 		local
 			scientist: SCIENTIST
-		  biologist: BIOLOGIST
-		  computer_scientist: COMPUTER_SCIENTIST
+			biologist: BIOLOGIST
+			computer_scientist: COMPUTER_SCIENTIST
 		do
 			create {BIOLOGIST} scientist
 			create {COMPUTER_SCIENTIST} scientist
@@ -178,23 +179,19 @@ feature {NONE} -- Initialization
 
 	test_lab
 		local
-		  lab: LAB
+			lab: LAB
 			scientist: SCIENTIST
 		do
 			new_out.open_write
-		  create lab
+			create lab
 			create {COMPUTER_SCIENTIST} scientist
 			lab.add_member (scientist)
-
 			create {BIO_INFORMATICS} scientist
 			scientist.id := 10
 			lab.add_member (scientist)
-
 			create {BIOLOGIST} scientist
 			scientist.id := 5
 			lab.remove_member (scientist)
-
-
 			lab.introduce_all
 			new_out.close
 			new_out.open_read
@@ -202,14 +199,47 @@ feature {NONE} -- Initialization
 			check
 				new_out.last_string.is_equal ("Id: 0")
 			end
-
 			new_out.read_line
 			new_out.read_line
 			check
 				new_out.last_string.is_equal ("Id: 10")
 			end
 			new_out.close
+		end
 
+	test_lab_extension
+		local
+			scientist: SCIENTIST
+			lab: LAB
+		do
+			new_out.open_write
+			create lab
+			create {COMPUTER_SCIENTIST} scientist
+			scientist.name := "Bob"
+			lab.add_member (scientist)
+			create {BIO_INFORMATICS} scientist
+			scientist.id := 10
+			scientist.name := "Ted"
+			lab.add_member (scientist)
+			create {BIOLOGIST} scientist
+			scientist.id := 10
+			scientist.name := "Jane"
+			lab.add_member (scientist)
+			lab.introduce_all
+			new_out.close
+			new_out.open_read
+			new_out.read_line
+			new_out.read_line
+			check
+				new_out.last_string.is_equal ("Name: Bob")
+			end
+			new_out.read_line
+			new_out.read_line
+			new_out.read_line
+			check
+				new_out.last_string.is_equal ("Name: Jane")
+			end
+			new_out.close
 		end
 
 end
